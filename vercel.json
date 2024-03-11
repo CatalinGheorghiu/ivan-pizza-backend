@@ -2,12 +2,6 @@
   "version": 2,
   "buildCommand": "yarn build",
   "outputDirectory": "dist",
-  "builds": [
-    {
-      "src": "dist/src/main.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
