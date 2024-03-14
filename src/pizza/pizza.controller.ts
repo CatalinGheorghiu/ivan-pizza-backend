@@ -8,7 +8,8 @@ import {
   Post,
 } from "@nestjs/common";
 import { PizzaService } from "./pizza.service";
-import { Pizza } from "@prisma/client";
+import { CreatePizzaDto } from "./dto/create-pizza.dto/create-pizza.dto";
+import { UpdatePizzaDto } from "./dto/update-pizza.dto/update-pizza.dto";
 
 @Controller("pizza")
 export class PizzaController {
@@ -32,21 +33,17 @@ export class PizzaController {
   @Post()
   async createPizza(
     @Body()
-    { canBeDeleted, description, name, origin, image, ingredientsIds }: Pizza,
+    createPizzaDto: CreatePizzaDto,
   ) {
-    return this.pizzaService.createPizza({
-      canBeDeleted,
-      description,
-      name,
-      origin,
-      image,
-      ingredientsIds,
-    });
+    return this.pizzaService.createPizza(createPizzaDto);
   }
 
   @Patch(":id")
-  async updatePizza(@Param("id") id: string, @Body() data: Pizza) {
-    return this.pizzaService.updatePizza({ id }, data);
+  async updatePizza(
+    @Param("id") id: string,
+    @Body() updatePizzaDto: UpdatePizzaDto,
+  ) {
+    return this.pizzaService.updatePizza({ id }, updatePizzaDto);
   }
 
   @Delete(":id")
