@@ -9,6 +9,8 @@ import {
 } from "@nestjs/common";
 import { IngredientService } from "./ingredient.service";
 import { Ingredient } from "@prisma/client";
+import { CreateIngredientDto } from "./dto/create-ingredient.dto/create-ingredient.dto";
+import { UpdateIngredientDto } from "./dto/update-ingredient.dto/update-ingredient.dto";
 
 @Controller("ingredient")
 export class IngredientController {
@@ -20,29 +22,27 @@ export class IngredientController {
   }
 
   @Get(":id")
-  async getSingleIngredient(
-    @Param("id") id: string,
-  ): Promise<Ingredient | null> {
-    return this.ingredient.getSingleIngredient({ where: { id } });
+  async getSingleIngredient(@Param("id") id: string): Promise<Ingredient> {
+    return this.ingredient.getSingleIngredient({ id });
   }
 
   @Post()
-  async createIngredient(@Body() data: Ingredient) {
-    const { name, pizzasIds } = data;
-
-    return this.ingredient.createIngredient({
-      name,
-      pizzasIds,
-    });
+  async createIngredient(
+    @Body() createIngredientDto: CreateIngredientDto,
+  ): Promise<Ingredient> {
+    return this.ingredient.createIngredient(createIngredientDto);
   }
 
   @Patch(":id")
-  async updateIngredient(@Param("id") id: string, @Body() data: Ingredient) {
-    return this.ingredient.updateIngredient({ id }, data);
+  async updateIngredient(
+    @Param("id") id: string,
+    @Body() updateIngredientDto: UpdateIngredientDto,
+  ): Promise<Ingredient> {
+    return this.ingredient.updateIngredient({ id }, updateIngredientDto);
   }
 
   @Delete(":id")
-  async deletePizza(@Param("id") id: string) {
+  async deletePizza(@Param("id") id: string): Promise<Ingredient> {
     return this.ingredient.deleteIngredient({ id });
   }
 }
