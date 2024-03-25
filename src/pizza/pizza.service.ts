@@ -13,7 +13,11 @@ export class PizzaService {
   constructor(private prisma: PrismaService) {}
 
   async getAllPizzas(): Promise<Pizza[]> {
-    const pizzas = await this.prisma.pizza.findMany();
+    const pizzas = await this.prisma.pizza.findMany({
+      include: {
+        ingredients: true,
+      },
+    });
 
     if (pizzas.length < 1) {
       throw new NotFoundException("There aren't any pizza at the moment");
@@ -22,7 +26,10 @@ export class PizzaService {
   }
 
   async getSinglePizza(where: Prisma.PizzaWhereUniqueInput): Promise<Pizza> {
-    const pizza = await this.prisma.pizza.findUnique({ where });
+    const pizza = await this.prisma.pizza.findUnique({
+      where,
+      include: { ingredients: true },
+    });
 
     if (!pizza) {
       throw new NotFoundException("The requested pizza does not exist!");
