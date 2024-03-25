@@ -14,7 +14,11 @@ export class IngredientService {
 
   // Get all ingredients
   async getAllIngredients(): Promise<Ingredient[]> {
-    const ingredients = await this.prisma.ingredient.findMany();
+    const ingredients = await this.prisma.ingredient.findMany({
+      include: {
+        pizzas: true,
+      },
+    });
 
     if (ingredients.length < 1) {
       throw new NotFoundException("There aren't any ingredients at the moment");
@@ -26,7 +30,10 @@ export class IngredientService {
   async getSingleIngredient(
     where: Prisma.IngredientWhereUniqueInput,
   ): Promise<Ingredient> {
-    const ingredient = await this.prisma.ingredient.findUnique({ where });
+    const ingredient = await this.prisma.ingredient.findUnique({
+      where,
+      include: { pizzas: true },
+    });
 
     if (!ingredient) {
       throw new NotFoundException("The requested ingredient does not exist!");
@@ -107,7 +114,7 @@ export class IngredientService {
       );
     }
 
-    if (!(dataPizzasIds instanceof Array) || dataPizzasIds.length < 1) {
+    if (!(dataPizzasIds instanceof Array)) {
       throw new NotFoundException("A pizza must have at least 1 ingredient!");
     }
 
