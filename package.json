@@ -25,7 +25,8 @@
     "prisma:studio": "npx prisma studio",
     "prisma:generate": "npx prisma generate",
     "prisma:seed": "npx prisma db seed",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && nest build"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
