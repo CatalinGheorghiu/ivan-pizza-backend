@@ -7,16 +7,20 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { Pizza, Prisma } from "@prisma/client";
+import { PaginationQueryDto } from "../common/dto/pagination-query.dto/pagination-query.dto";
 
 @Injectable()
 export class PizzaService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllPizzas(): Promise<Pizza[]> {
+  async getAllPizzas(paginationQuery: PaginationQueryDto): Promise<Pizza[]> {
+    const { limit, offset } = paginationQuery;
     const pizzas = await this.prisma.pizza.findMany({
       include: {
         ingredients: true,
       },
+      skip: offset ? Number(offset) : undefined,
+      take: limit ? Number(limit) : undefined,
     });
 
     if (pizzas.length < 1) {
@@ -117,13 +121,17 @@ export class PizzaService {
   ): Promise<Pizza> {
     // Get the pizza with the requested ID
     const pizza = await this.prisma.pizza.findUnique({ where });
-    // Provided ingredients ID
-    const { ingredientsIds: dataIngredientsIds } = data;
+
     if (!pizza) {
       throw new NotFoundException(
         "The pizza with the requested ID doesn't exist!",
       );
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...pizzaWithoutId } = pizza;
+    const newPizza = { ...pizzaWithoutId, ...data };
+    const { ingredientsIds: dataIngredientsIds } = newPizza;
 
     if (
       !(dataIngredientsIds instanceof Array) ||
@@ -132,8 +140,6 @@ export class PizzaService {
       throw new NotFoundException("A pizza must have at least 1 ingredient!");
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, ...pizzaWithoutId } = pizza;
     const removedIngredientIds = pizza.ingredientsIds.filter(
       (id) => !dataIngredientsIds.includes(id),
     );
@@ -168,10 +174,7 @@ export class PizzaService {
     // Updated the pizza if the provided ingredients are valid
     const updatedPizza = await this.prisma.pizza.update({
       where,
-      data: {
-        ...pizzaWithoutId,
-        ...data,
-      },
+      data: newPizza,
     });
 
     // Update the ingredients ID list to reference the updated pizza

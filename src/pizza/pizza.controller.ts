@@ -6,18 +6,20 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 import { PizzaService } from "./pizza.service";
 import { CreatePizzaDto } from "./dto/create-pizza.dto/create-pizza.dto";
 import { UpdatePizzaDto } from "./dto/update-pizza.dto/update-pizza.dto";
+import { PaginationQueryDto } from "../common/dto/pagination-query.dto/pagination-query.dto";
 
 @Controller("pizza")
 export class PizzaController {
   constructor(private readonly pizzaService: PizzaService) {}
 
   @Get()
-  async getAllPizzas() {
-    return this.pizzaService.getAllPizzas();
+  async getAllPizzas(@Query() paginationQuery: PaginationQueryDto) {
+    return this.pizzaService.getAllPizzas(paginationQuery);
   }
 
   @Get(":id")
