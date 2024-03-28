@@ -7,17 +7,23 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { Ingredient, Prisma } from "@prisma/client";
+import { PaginationQueryDto } from "../common/dto/pagination-query.dto/pagination-query.dto";
 
 @Injectable()
 export class IngredientService {
   constructor(private prisma: PrismaService) {}
 
   // Get all ingredients
-  async getAllIngredients(): Promise<Ingredient[]> {
+  async getAllIngredients(
+    paginationQuery: PaginationQueryDto,
+  ): Promise<Ingredient[]> {
+    const { limit, offset } = paginationQuery;
     const ingredients = await this.prisma.ingredient.findMany({
       include: {
         pizzas: true,
       },
+      skip: offset ? Number(offset) : undefined,
+      take: limit ? Number(limit) : undefined,
     });
 
     if (ingredients.length < 1) {

@@ -7,7 +7,13 @@ async function bootstrap() {
     snapshot: true,
     cors: true,
   });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
   await app.listen(3000);
 }
 bootstrap();

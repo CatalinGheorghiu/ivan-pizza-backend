@@ -6,19 +6,23 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 import { IngredientService } from "./ingredient.service";
 import { Ingredient } from "@prisma/client";
 import { CreateIngredientDto } from "./dto/create-ingredient.dto/create-ingredient.dto";
 import { UpdateIngredientDto } from "./dto/update-ingredient.dto/update-ingredient.dto";
+import { PaginationQueryDto } from "../common/dto/pagination-query.dto/pagination-query.dto";
 
 @Controller("ingredient")
 export class IngredientController {
   constructor(private readonly ingredient: IngredientService) {}
 
   @Get()
-  async getAllIngredients(): Promise<Ingredient[]> {
-    return this.ingredient.getAllIngredients();
+  async getAllIngredients(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<Ingredient[]> {
+    return this.ingredient.getAllIngredients(paginationQuery);
   }
 
   @Get(":id")
