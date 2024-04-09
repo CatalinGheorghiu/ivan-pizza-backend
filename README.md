@@ -11,7 +11,12 @@ This repository contains the backend code for Ivan's Pizza web application. It p
 5. Start the server with `yarn start:dev`.
 
 ## Usage
-The main endpoints are `/pizza` and `/ingredient`, which can be used for CRUD operations. For example, to edit a pizza, use `/pizza/<id_here>`.
+The main endpoints are:
+
+- **Pizzas**: [http://localhost:3000/pizza](http://localhost:3000/pizza)
+- **Ingredients**: [http://localhost:3000/ingredient](http://localhost:3000/ingredient)
+
+These endpoints can be used for CRUD operations. For example, to edit a pizza, use `/pizza/<id_here>`.
 
 ## Dependencies
 - **Node.js**: v14 or higher
