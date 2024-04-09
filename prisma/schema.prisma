@@ -13,7 +13,7 @@ model Pizza {
   origin         String
   image          String
   description    String
-  canBeDeleted   Boolean      @default(false)
+  canBeDeleted   Boolean      @default(true)
   ingredients    Ingredient[] @relation(fields: [ingredientsIds], references: [id])
   ingredientsIds String[]     @db.ObjectId
 }
